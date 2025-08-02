@@ -1,0 +1,23 @@
+[gd_scene load_steps=5 format=3 uid="uid://ctppbgpd0nekl"]
+
+[ext_resource type="Script" uid="uid://srckajemddsx" path="res://test_2.gd" id="1_vfvc6"]
+[ext_resource type="Script" uid="uid://3wbmgt6toceb" path="res://addons/grid_2D/Classes/Grid2D.gd" id="2_qih2i"]
+[ext_resource type="Script" uid="uid://cy6bt3qxspiy5" path="res://addons/grid_2D/Classes/GridImage.gd" id="3_2pks0"]
+[ext_resource type="Texture2D" uid="uid://bx15csp3ka0c6" path="res://giraffe.jpg" id="4_yerdr"]
+
+[node name="Node2D" type="Node2D"]
+script = ExtResource("1_vfvc6")
+
+[node name="Grid2D" type="Node2D" parent="."]
+position = Vector2(557.48, 14.15)
+script = ExtResource("2_qih2i")
+grid_overlay = true
+metadata/_custom_type_script = "uid://3wbmgt6toceb"
+
+[node name="GridImage" type="Node2D" parent="Grid2D"]
+position = Vector2(25, 25)
+script = ExtResource("3_2pks0")
+img = ExtResource("4_yerdr")
+size = Vector2i(8, 5)
+grid_position = Vector2i(3, 3)
+metadata/_custom_type_script = "uid://cy6bt3qxspiy5"

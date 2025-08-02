@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3 uid="uid://d3trjcr3wiaee"]
+
+[ext_resource type="Script" uid="uid://3wbmgt6toceb" path="res://addons/grid_2D/Classes/Grid2D.gd" id="1_37kl0"]
+[ext_resource type="Script" uid="uid://cy6bt3qxspiy5" path="res://addons/grid_2D/Classes/GridImage.gd" id="2_6uqi0"]
+[ext_resource type="Texture2D" uid="uid://dspyysioc3y8s" path="res://icon.svg" id="3_ppyta"]
+
+[node name="Test" type="Node2D"]
+
+[node name="Grid2D" type="Node2D" parent="."]
+script = ExtResource("1_37kl0")
+grid_color = Color(0.913802, 0, 0.388525, 1)
+background_color = Color(1, 1, 1, 1)
+metadata/_custom_type_script = "uid://3wbmgt6toceb"
+
+[node name="GridImage" type="Node2D" parent="Grid2D"]
+script = ExtResource("2_6uqi0")
+img = ExtResource("3_ppyta")
+size = Vector2i(5, 5)
+metadata/_custom_type_script = "uid://cy6bt3qxspiy5"

@@ -1,0 +1,20 @@
+[gd_scene load_steps=5 format=3 uid="uid://ctppbgpd0nekl"]
+
+[ext_resource type="Script" uid="uid://3wbmgt6toceb" path="res://addons/grid_2D/Classes/Grid2D.gd" id="1_qih2i"]
+[ext_resource type="Script" uid="uid://srckajemddsx" path="res://test_2.gd" id="1_vfvc6"]
+[ext_resource type="Script" uid="uid://cy6bt3qxspiy5" path="res://addons/grid_2D/Classes/GridImage.gd" id="2_sth5e"]
+[ext_resource type="Texture2D" uid="uid://dspyysioc3y8s" path="res://icon.svg" id="4_2pks0"]
+
+[node name="Node2D" type="Node2D"]
+script = ExtResource("1_vfvc6")
+
+[node name="Grid2D" type="Node2D" parent="."]
+script = ExtResource("1_qih2i")
+grid_overlay = true
+metadata/_custom_type_script = "uid://3wbmgt6toceb"
+
+[node name="GridImage" type="Node2D" parent="Grid2D"]
+script = ExtResource("2_sth5e")
+img = ExtResource("4_2pks0")
+size = Vector2i(5, 5)
+metadata/_custom_type_script = "uid://cy6bt3qxspiy5"

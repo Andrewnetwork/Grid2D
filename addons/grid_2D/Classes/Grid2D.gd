@@ -2,11 +2,11 @@
 class_name Grid2D
 extends Node2D
 
-@export var cell_size: Vector2 = Vector2(25, 25)  : set = change_cell_size
-@export var grid_size: Vector2 = Vector2(20, 15) : set = change_grid_size
-@export var grid_overlay = false : set = change_grid_overlay
-@export var grid_color: Color = Color.BLACK : set = change_grid_color
-@export var background_color : Color = Color.WHITE : set = change_bg_color
+@export var cell_size := Vector2i(25, 25): set = change_cell_size
+@export var grid_size := Vector2i(20, 15): set = change_grid_size
+@export var grid_overlay := false: set = change_grid_overlay
+@export var grid_color := Color.BLACK : set = change_grid_color
+@export var background_color := Color.WHITE : set = change_bg_color
 
 var grid_items : Array[GridItem]
 var grid_boundaries : Array[StaticBody2D]
@@ -14,8 +14,8 @@ var grid_lines: GridLines
 
 func _init():
 	grid_lines = GridLines.new(self)
-	add_child(grid_lines)
-	
+	connect("child_entered_tree", child_entered_tree)
+
 func create_static_body_boundaries():
 	# If grid boundaries exist, remove them. 
 	if !grid_boundaries.is_empty():
@@ -41,17 +41,6 @@ func create_static_body_boundaries():
 
 func enable_static_body_boundary():
 	create_static_body_boundaries()
-	
-func _ready():
-	if grid_overlay:
-		grid_lines.z_index = 100
-	else:
-		grid_lines.z_index = 0
-		
-	for child in get_children():
-		grid_items.append(child)
-	
-	connect("child_entered_tree", child_entered_tree)
 
 func add_item(grid_item: Node2D, center_cell: Vector2 ):
 	grid_item.position = Vector2(center_cell.y*cell_size.y-cell_size.y/2.0, center_cell.x*cell_size.x+cell_size.x/2.0)
@@ -79,16 +68,13 @@ func change_grid_size(new_grid_size: Vector2):
 	update_property()
 func change_bg_color(bg_color):
 	background_color = bg_color
-	queue_redraw()
+	update_property()
 func change_grid_color(grid_new_color):
 	grid_color = grid_new_color
-	grid_lines.queue_redraw()
+	update_property()
 func change_grid_overlay(overlay_bool):
 	grid_overlay = overlay_bool
-	if grid_overlay:
-		grid_lines.z_index = 100
-	else:
-		grid_lines.z_index = 0
+	update_property()
 func get_pixel_size():
 	return grid_size*cell_size
 func _draw():

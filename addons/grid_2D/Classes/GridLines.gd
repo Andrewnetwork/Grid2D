@@ -5,12 +5,18 @@ var parent_grid: Grid2D
 
 func _init(parent_grid_: Grid2D):
 	parent_grid = parent_grid_
+	parent_grid.add_child(self)
 	
 func _draw():
 	var cell_size = parent_grid.cell_size
 	var grid_size = parent_grid.grid_size
 	var grid_color = parent_grid.grid_color
 	
+	if parent_grid.grid_overlay:
+		z_index = 100
+	else:
+		z_index = 0
+		
 	# Vertical lines
 	for x in range(grid_size.x + 1):
 		var start = Vector2(x * cell_size.x, 0)

@@ -20,6 +20,8 @@ func _unhandled_input(event: InputEvent):
 		var state_idx = Vector2i(mpos)/cell_size
 		toggle_grid_state[state_idx.x][state_idx.y] = !toggle_grid_state[state_idx.x][state_idx.y]
 		queue_redraw()
+		return true
+	return false
 func create():
 	toggle_grid_state = []
 	#Initialize grid state. 

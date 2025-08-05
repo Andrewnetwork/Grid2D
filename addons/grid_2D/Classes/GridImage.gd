@@ -3,7 +3,6 @@ class_name GridImage
 extends GridItem
 
 @export var img: Texture2D: set = set_img
-@export var collision_mask: Grid2DCollisionMask
 
 var sprite: Sprite2D
 var default_size: Vector2i

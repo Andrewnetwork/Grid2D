@@ -2,51 +2,30 @@
 class_name Grid2DCollisionMask
 extends Node2D
 
-@export var n_rows: int
-@export var n_cols: int
+@export var n_rows := 5
+@export var n_cols := 5
 @export var mask: Array[Array] = []
 
-var editor_grid: GridItem
-var grid_image: GridImage
-var editor_tiles: Array[Array]
+var parent_grid_item: GridItem
 
-func attach(gi: GridImage):
-	grid_image = gi
-	n_rows = gi.size.y
-	n_cols = gi.size.x
-	# Initialize multi-dimensional boolean mask and editor tiles matrix. 
-	for ncol in range(gi.size.x):
-		for nrow in range(gi.size.y):
-			var na : Array[bool] = []
-			na.resize(n_cols)
-			na.fill(false)
-			mask.append(na)
-			var nt: Array[ColorRect] = []
-			editor_tiles.append(nt)
-func editor_tile_clicked(event: InputEvent, col: int, row: int):
-	if event.is_pressed():
-		if mask[col][row]:
-			editor_tiles[col][row].color = Color(1,0,0,0.25)
-		else:
-			editor_tiles[col][row].color = Color(0,1,0,0.25)
-		mask[col][row] = !mask[col][row]
-		
-func make_editor_grid(parent_grid: Grid2D):
-	editor_grid = GridItem.new(parent_grid)
-	var cell_size = parent_grid.cell_size
-
-	for col in range(n_cols):
-		for row in range(n_rows):
-			var tile = ColorRect.new()
-			if mask[col][row]:
-				tile.color = Color(0,1,0,0.25)
-			else:
-				tile.color = Color(1,0,0,0.25)
-			tile.size = cell_size
-			tile.position = Vector2i(col,row)*cell_size
-			tile.connect("gui_input", func(event): editor_tile_clicked(event, col, row))
-			editor_tiles[col].append(tile)
-			editor_grid.add_child(tile)
-		
-			
-	parent_grid.add_child(editor_grid)
+func _enter_tree():
+	var parent = get_parent()
+	if parent is GridItem:
+		parent_grid_item = parent
+		init_mask(parent_grid_item.size.x, parent_grid_item.size.y)
+	else:
+		parent_grid_item = null
+		update_configuration_warnings()
+func _get_configuration_warnings() -> PackedStringArray:
+	var warnings = []
+	if parent_grid_item == null:
+		warnings.append("No grid item parent. Add as child to a grid item.")
+	return warnings
+func init_mask(nrows, ncols):
+	n_rows = nrows
+	n_cols = ncols
+	for ncol in range(ncols):
+		var na : Array[bool] = []
+		na.resize(nrows)
+		na.fill(false)
+		mask.append(na)

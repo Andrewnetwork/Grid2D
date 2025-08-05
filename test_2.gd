@@ -1,7 +1,12 @@
 @tool
 extends Node2D
 
+func is_vis():
+	print("Is visible")
+	
 func _ready():
+	#$ToolColorRect.connect("gui_input", test_cb )
+	#$ToolColorRect.mouse_filter = Control.MOUSE_FILTER_STOP
 	#var grid = Grid2D.new()
 	#var grid_item = GridItem.new(grid)
 	#var ni = GridImage.new(grid)

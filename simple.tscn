@@ -9,13 +9,15 @@
 
 [node name="Grid2D" type="Node2D" parent="."]
 script = ExtResource("1_68hca")
-grid_size = Vector2i(15, 5)
+grid_size = Vector2i(22, 9)
 metadata/_custom_type_script = "uid://3wbmgt6toceb"
 
 [node name="GridImage" type="Node2D" parent="Grid2D"]
+position = Vector2(100, 50)
 script = ExtResource("2_db8bj")
 img = ExtResource("3_u4emj")
 size = Vector2i(5, 5)
+grid_position = Vector2i(5, 3)
 metadata/_custom_type_script = "uid://cy6bt3qxspiy5"
 
 [node name="Grid2DCollisionMask" type="Node2D" parent="Grid2D/GridImage"]
@@ -24,11 +26,11 @@ mask = Array[Array]([Array[bool]([false, false, false, false, false]), Array[boo
 metadata/_custom_type_script = "uid://cv6k3rhnbapht"
 
 [node name="GridImage2" type="Node2D" parent="Grid2D"]
-position = Vector2(250, 0)
+position = Vector2(325, 50)
 script = ExtResource("2_db8bj")
 img = ExtResource("3_u4emj")
 size = Vector2i(5, 5)
-grid_position = Vector2i(11, 1)
+grid_position = Vector2i(14, 3)
 metadata/_custom_type_script = "uid://cy6bt3qxspiy5"
 
 [node name="Grid2DCollisionMask" type="Node2D" parent="Grid2D/GridImage2"]

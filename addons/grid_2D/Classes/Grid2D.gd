@@ -11,11 +11,24 @@ extends Node2D
 var grid_items : Array[GridItem]
 var grid_boundaries : Array[StaticBody2D]
 var grid_lines: GridLines
+var occupied_matrix: Array[Array]
 
 func _init():
 	grid_lines = GridLines.new(self)
+	initialize_occupied_matrix()
 	connect("child_entered_tree", child_entered_tree)
 
+func is_cell_occupied(pos: Vector2i):
+	return occupied_matrix[pos.x][pos.y]
+	
+func initialize_occupied_matrix():
+	# Initialize
+	for ncol in range(grid_size.x):
+		var na = []
+		na.resize(grid_size.y)
+		na.fill(null)
+		occupied_matrix.append(na)
+	
 func create_static_body_boundaries():
 	# If grid boundaries exist, remove them. 
 	if !grid_boundaries.is_empty():

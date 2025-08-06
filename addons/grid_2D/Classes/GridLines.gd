@@ -1,5 +1,6 @@
 class_name GridLines
 extends Node2D
+## A layer for drawing grid lines.  
 
 var parent_grid: Grid2D
 

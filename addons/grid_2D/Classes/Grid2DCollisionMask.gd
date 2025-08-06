@@ -13,10 +13,12 @@ func _enter_tree():
 	var parent = get_parent()
 	if parent is GridItem:
 		parent_grid_item = parent
+		parent_grid_item.collision_mask = self
 		if mask == []:
 			init_mask(parent_grid_item.size.x, parent_grid_item.size.y)
+		parent.register_occupied_cells()
 		
-		if Engine.is_editor_hint():
+		if Engine.is_editor_hint() and editor_grid == null:
 			editor_grid = ToggleGrid.new()
 			editor_grid.cell_size = parent_grid_item.parent_grid.cell_size
 			editor_grid.grid_size = Vector2i(n_cols, n_rows)

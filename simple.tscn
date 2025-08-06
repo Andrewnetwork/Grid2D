@@ -1,0 +1,37 @@
+[gd_scene load_steps=5 format=3 uid="uid://do8do8i15ajyd"]
+
+[ext_resource type="Script" uid="uid://3wbmgt6toceb" path="res://addons/grid_2D/Classes/Grid2D.gd" id="1_68hca"]
+[ext_resource type="Script" uid="uid://cy6bt3qxspiy5" path="res://addons/grid_2D/Classes/GridImage.gd" id="2_db8bj"]
+[ext_resource type="Texture2D" uid="uid://dspyysioc3y8s" path="res://icon.svg" id="3_u4emj"]
+[ext_resource type="Script" uid="uid://cv6k3rhnbapht" path="res://addons/grid_2D/Classes/Grid2DCollisionMask.gd" id="4_uti7t"]
+
+[node name="Simple" type="Node2D"]
+
+[node name="Grid2D" type="Node2D" parent="."]
+script = ExtResource("1_68hca")
+grid_size = Vector2i(15, 5)
+metadata/_custom_type_script = "uid://3wbmgt6toceb"
+
+[node name="GridImage" type="Node2D" parent="Grid2D"]
+script = ExtResource("2_db8bj")
+img = ExtResource("3_u4emj")
+size = Vector2i(5, 5)
+metadata/_custom_type_script = "uid://cy6bt3qxspiy5"
+
+[node name="Grid2DCollisionMask" type="Node2D" parent="Grid2D/GridImage"]
+script = ExtResource("4_uti7t")
+mask = Array[Array]([Array[bool]([false, false, false, false, false]), Array[bool]([false, false, false, false, false]), Array[bool]([false, false, false, false, false]), Array[bool]([false, false, false, false, false]), Array[bool]([false, false, false, false, false])])
+metadata/_custom_type_script = "uid://cv6k3rhnbapht"
+
+[node name="GridImage2" type="Node2D" parent="Grid2D"]
+position = Vector2(250, 0)
+script = ExtResource("2_db8bj")
+img = ExtResource("3_u4emj")
+size = Vector2i(5, 5)
+grid_position = Vector2i(11, 1)
+metadata/_custom_type_script = "uid://cy6bt3qxspiy5"
+
+[node name="Grid2DCollisionMask" type="Node2D" parent="Grid2D/GridImage2"]
+script = ExtResource("4_uti7t")
+mask = Array[Array]([Array[bool]([false, false, false, false, false]), Array[bool]([false, false, false, false, false]), Array[bool]([false, false, false, false, false]), Array[bool]([false, false, false, false, false]), Array[bool]([false, false, false, false, false])])
+metadata/_custom_type_script = "uid://cv6k3rhnbapht"

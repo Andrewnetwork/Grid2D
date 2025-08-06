@@ -9,6 +9,7 @@ extends Node2D
 @export var snap_to_grid = true : set = set_snap_to_grid
 
 var parent_grid: Grid2D
+var collision_mask: Grid2DCollisionMask
 
 func move_to_position(pos: Vector2):
 	## Moves grid item to the cell containing pos. Assumes coordinates local to parent_grid. 
@@ -18,21 +19,48 @@ func move_to_position(pos: Vector2):
 		var max_pos = grid_pixel_size-item_pixel_size
 		var new_grid_pos = (Vector2i(pos) / parent_grid.cell_size) + Vector2i.ONE
 		
-		grid_position = new_grid_pos
-		
 		# Handle out of grid bounds conditions. 
 		if pos.x < 0:
-			grid_position.x = 1
+			new_grid_pos.x = 1
 		elif pos.x > max_pos.x:
-			grid_position.x = parent_grid.grid_size.x-size.x+1
+			new_grid_pos.x = parent_grid.grid_size.x-size.x+1
 		if pos.y < 0:
-			grid_position.y = 1
+			new_grid_pos.y = 1
 		elif pos.y > max_pos.y:
-			grid_position.y =  parent_grid.grid_size.y-size.y+1
+			new_grid_pos.y =  parent_grid.grid_size.y-size.y+1
+			
+		#grid_position = new_grid_pos
+		move_and_collide(new_grid_pos)
 func row_move(n_rows: int):
 	position.y += n_rows * parent_grid.cell_size.y
 func column_move(n_cols):
 	position.x += n_cols * parent_grid.cell_size.x
+func move_and_collide(grid_pos: Vector2i, test_only:=false):
+	if parent_grid != null:
+		for new_loc in get_occupied_cells(grid_pos):
+			if parent_grid.occupied_matrix[new_loc.x][new_loc.y] != self && parent_grid.occupied_matrix[new_loc.x][new_loc.y] != null:
+				print("Refusing to move.")
+		grid_position = grid_pos
+		register_occupied_cells()
+		
+func register_occupied_cells():
+	## Register the cells occupied by this matrix in the parent. 
+	for col in range(size.x):
+		for row in range(size.y):
+			if collision_mask != null and !collision_mask.mask[col][row]:
+				parent_grid.occupied_matrix[col][row] = self
+
+func get_occupied_cells(offset:=Vector2i(0,0)):
+	# Default offset is local coordinates. 
+	if collision_mask != null:
+		var cells: Array[Vector2i] = []
+		for col in range(size.x):
+			for row in range(size.y):
+				if !collision_mask.mask[col][row]:
+					cells.append(Vector2i(col,row)+offset)
+		return cells
+	else:
+		return []
 # Event Handlers
 func parent_grid_updated():
 	## Called from parent grid when a property is changed. 

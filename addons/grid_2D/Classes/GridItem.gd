@@ -2,6 +2,8 @@
 class_name GridItem
 extends Node2D
 
+signal size_changed()
+
 ## Size in grid columns and rows.
 @export var size: Vector2i : set = set_size 
 ## The upper left origin cell. 
@@ -31,28 +33,29 @@ func move_to_position(pos: Vector2):
 			
 		#grid_position = new_grid_pos
 		move_and_collide(new_grid_pos)
-func row_move(n_rows: int):
-	position.y += n_rows * parent_grid.cell_size.y
-func column_move(n_cols):
-	position.x += n_cols * parent_grid.cell_size.x
 func move_and_collide(grid_pos: Vector2i, test_only:=false):
 	if parent_grid != null:
-		for new_loc in get_occupied_cells(grid_pos):
-			if parent_grid.occupied_matrix[new_loc.x][new_loc.y] != self && parent_grid.occupied_matrix[new_loc.x][new_loc.y] != null:
-				print("Refusing to move.")
-		grid_position = grid_pos
-		register_occupied_cells()
-		
-func register_occupied_cells():
-	## Register the cells occupied by this matrix in the parent. 
-	for col in range(size.x):
-		for row in range(size.y):
-			if collision_mask != null and !collision_mask.mask[col][row]:
-				parent_grid.occupied_matrix[col][row] = self
-
-func get_occupied_cells(offset:=Vector2i(0,0)):
-	# Default offset is local coordinates. 
+		# Horribly unoptimized. 
+		var collision_at_grid_pos := false
+		var occupied_cells = get_occupied_cells(grid_pos)
+		for grid_item in parent_grid.grid_items:
+			if grid_item != self:
+				var other_occupied_cells = grid_item.get_occupied_cells()
+				for occupied_cell in occupied_cells:
+					if other_occupied_cells.has(occupied_cell):
+						collision_at_grid_pos = true
+						break
+				if collision_at_grid_pos:
+					break
+		print("Collision result: ",collision_at_grid_pos)
+		if collision_at_grid_pos:
+			grid_position = grid_position
+		else:
+			grid_position = grid_pos
+func get_occupied_cells(offset := -Vector2i.ONE):
 	if collision_mask != null:
+		if offset == -Vector2i.ONE:
+			offset = grid_position
 		var cells: Array[Vector2i] = []
 		for col in range(size.x):
 			for row in range(size.y):
@@ -62,8 +65,7 @@ func get_occupied_cells(offset:=Vector2i(0,0)):
 	else:
 		return []
 # Event Handlers
-func parent_grid_updated():
-	## Called from parent grid when a property is changed. 
+func _grid_size_changed(): 
 	set_grid_position(grid_position)
 	set_size(size)
 # Getters and Setters
@@ -75,6 +77,7 @@ func get_aspect_ratio():
 	return Vector2i(size.x/gcd,size.y/gcd)
 func set_size(item_size: Vector2i):
 	size = item_size
+	emit_signal("size_changed")
 func set_grid_position(grid_pos: Vector2i):
 	grid_position = grid_pos
 	if parent_grid != null:
@@ -88,6 +91,7 @@ func _enter_tree():
 	if parent is Grid2D:
 		parent_grid = get_parent()
 		set_grid_position(grid_position)
+		parent.connect("size_changed", _grid_size_changed)
 	else:
 		parent_grid = null
 		update_configuration_warnings()

@@ -37,6 +37,7 @@ func create_child_sprite():
 		sprite.centered = false
 		add_child(sprite)
 func set_size(new_size: Vector2i):
+	super(new_size)
 	# Overriding the default size. 
 	if new_size == Vector2i.ZERO:
 		size = default_size

@@ -2,6 +2,7 @@
 class_name Grid2D
 extends Node2D
 
+signal size_changed()
 
 @export var cell_size := Vector2i(25, 25): set = change_cell_size
 @export var grid_size := Vector2i(20, 15): set = change_grid_size
@@ -12,18 +13,10 @@ extends Node2D
 var grid_items : Array[GridItem]
 var grid_boundaries : Array[StaticBody2D]
 var grid_lines: GridLines
-var occupied_matrix: Array[Array]
-
-
+ 
 func is_cell_occupied(pos: Vector2i):
-	return occupied_matrix[pos.x][pos.y]
-func initialize_occupied_matrix():
-	# Initialize
-	for ncol in range(grid_size.x):
-		var na = []
-		na.resize(grid_size.y)
-		na.fill(null)
-		occupied_matrix.append(na)	
+	#TODO: implement
+	pass
 func create_static_body_boundaries():
 	# If grid boundaries exist, remove them. 
 	if !grid_boundaries.is_empty():
@@ -53,42 +46,38 @@ func add_item(grid_item: Node2D, center_cell: Vector2 ):
 	add_child(grid_item)
 func move_item(grid_item: Node2D, new_center_cell: Vector2):
 	grid_item.position = Vector2(new_center_cell.y*cell_size.y-cell_size.y/2.0, new_center_cell.x*cell_size.x+cell_size.x/2.0)
-# Event Handlers
+# Signal Handlers
 func _child_entered_tree(node: Node):
 	if node is GridItem:
 		grid_items.append(node)
+func _size_changed():
+	grid_lines.queue_redraw()
+	queue_redraw()
 # Overloaded Functions
 func _init():
 	grid_lines = GridLines.new(self)
-	initialize_occupied_matrix()
 	connect("child_entered_tree", _child_entered_tree)
+	connect("size_changed", _size_changed)
 func _draw():
 	# Background
 	draw_rect(Rect2(Vector2(0.0, 0.0), 
 		Vector2(cell_size.x * grid_size.x, cell_size.y * grid_size.y) ),
 			background_color)
 # Getters and Setters
-func update_property():
-	for child in grid_items:
-		child.parent_grid_updated()
-	if !grid_boundaries.is_empty(): 
-		enable_static_body_boundary()
-	grid_lines.queue_redraw()
-	queue_redraw()
 func change_cell_size(new_cell_size: Vector2):
 	cell_size = new_cell_size
-	update_property()
+	emit_signal("size_changed")
 func change_grid_size(new_grid_size: Vector2):
 	grid_size = new_grid_size
-	update_property()
+	emit_signal("size_changed")
 func change_bg_color(bg_color):
 	background_color = bg_color
-	update_property()
+	queue_redraw()
 func change_grid_color(grid_new_color):
 	grid_color = grid_new_color
-	update_property()
+	grid_lines.queue_redraw()
 func change_grid_overlay(overlay_bool):
 	grid_overlay = overlay_bool
-	update_property()
+	grid_lines.queue_redraw()
 func get_pixel_size():
 	return grid_size*cell_size
